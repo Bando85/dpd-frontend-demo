@@ -1,0 +1,17 @@
+/*
+ * Copyright (c) 2023. Created by Andras Laczo.
+ */
+
+.footer {
+    margin-top: auto;
+    height: 50px;
+    background-color: #3a50e1;
+    flex-shrink: 0;
+    border-top: 2px solid #5d5076;
+    padding: 10px;
+    text-align: center;
+}
+
+.footer-text {
+    color: #d3f2f3;
+}

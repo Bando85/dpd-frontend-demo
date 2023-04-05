@@ -1,0 +1,22 @@
+/*
+ * Copyright (c) 2023. Created by Andras Laczo.
+ */
+
+.person-edit-header{
+    padding-top: 20px;
+}
+
+.form-error-message span{
+    font-size: 12px;
+    padding: 3px;
+    color: darkred;
+    display: none;
+}
+
+input:invalid ~ .form-error-message span{
+    display: block;
+}
+
+input:focus ~ .form-error-message span{
+    display: none;
+}
