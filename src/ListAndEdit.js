@@ -1,20 +1,10 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import MaterialReactTable from 'material-react-table';
-import {
-    Box,
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    IconButton,
-    MenuItem,
-    Stack,
-    TextField,
-    Tooltip,
-} from '@mui/material';
-import { Delete, Edit } from '@mui/icons-material';
+import {MenuItem} from '@mui/material';
+import { Delete } from '@mui/icons-material';
 import columnsDef from './columnsDef';
+import addSubrows from "./addSubrows";
+import {config} from "./URLconstans";
 
 const ListAndEdit = () => {
 
@@ -31,7 +21,6 @@ const ListAndEdit = () => {
 
     useEffect(() => {
         fetchData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const fetchData = async () => {
@@ -41,8 +30,9 @@ const ListAndEdit = () => {
             setIsRefetching(true);
         }
         try {
-            const response = await fetch('/api/persons');
+            const response = await fetch(config.url + '/api/persons');
             const json = await response.json();
+            addSubrows(json);
             setTableData(json);
             setRowCount(json.length);
         } catch (error) {
@@ -56,11 +46,11 @@ const ListAndEdit = () => {
     };
 
     const handleSaveRow = async ({exitEditingMode, row, values}) => {
-        //if using flat data and simple accessorKeys/ids, you can just do a simple assignment here.
+
         values.id=row.id;
 
         try {
-            const response = await fetch(`/api/person/` + row.id, {
+            const response = await fetch(config.url + `/api/person/` + row.id, {
                 method: 'PUT',
                 headers: {
                     'Accept': 'application/json',
@@ -77,12 +67,12 @@ const ListAndEdit = () => {
 
         fetchData();
 
-        exitEditingMode(); //required to exit editing mode
+        exitEditingMode();
     };
 
     const handleDepersonalization = async (row) => {
         try {
-            const response = await fetch(`/api/depersonalization/` + row.id, {
+            const response = await fetch(config.url + `/api/depersonalization/` + row.id, {
                 method: 'DELETE'
             });
         } catch (error) {
@@ -91,7 +81,7 @@ const ListAndEdit = () => {
             return;
         }
         setIsError(false);
-        fetchData();//required to exit editing mode
+        fetchData();
     };
 
     return (
@@ -101,6 +91,7 @@ const ListAndEdit = () => {
             getRowId={(row) => row.id}
             editingMode="row"
             enableEditing
+            enableExpanding
             onEditingRowSave={handleSaveRow}
             muiToolbarAlertBannerProps={
                 isError
@@ -112,12 +103,13 @@ const ListAndEdit = () => {
             }
             rowCount={rowCount}
             enableRowActions
-            renderRowActionMenuItems={({ row }) => [
+            renderRowActionMenuItems={({ row }) => {
+                return [
                 <MenuItem key="delete" onClick={() => handleDepersonalization(row)}>
                             <Delete/>
                     Depersonalization
                 </MenuItem>
-            ]}
+            ]}}
             state={{
                 isLoading,
                 showAlertBanner: isError,

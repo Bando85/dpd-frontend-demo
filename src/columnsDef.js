@@ -26,10 +26,16 @@ const columnsDef = [
     {
         accessorKey: 'address',
         header: 'Address',
+        Cell: ({ cell }) => <>{
+            cell.getValue() ? (cell.getValue().split(";") ? cell.getValue().split(";")[0] : cell.getValue()) : ''
+        }</> ,
     },
     {
         accessorKey: 'phone',
         header: 'Phone',
+        Cell: ({ cell }) => <>{
+            cell.getValue() ? (cell.getValue().split(";") ? cell.getValue().split(";")[0] : cell.getValue()) : ''
+        }</> ,
     },
 ];
 

@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Link, useNavigate, useParams} from 'react-router-dom';
 import {Button, Container, Form, FormGroup, Input, Label} from 'reactstrap';
 import './PersonEdit.css';
+import {config} from "./URLconstans";
 
 const PersonEdit = () => {
 
@@ -18,7 +19,8 @@ const PersonEdit = () => {
     const [person, setPerson] = useState(initialFormState);
     const navigate = useNavigate();
     const errorMessageName = "Please use 1-20 characters and only letters"
-    const errorMessagPositiveNumber = "Must be a positiv integer"
+    const errorTaj = "Must be a positiv number, max. 9 character long"
+    const errorTax = "Must be a positiv number, max. 11 character long"
 
     const handleChange = (event) => {
         let {name, value} = event.target
@@ -29,7 +31,7 @@ const PersonEdit = () => {
         event.preventDefault();
         console.log(person)
 
-        await fetch(`/api/person`, {
+        await fetch(config.url + `/api/person`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -49,11 +51,8 @@ const PersonEdit = () => {
                         <FormGroup>
                             <Label for="name">Name</Label>
                             <Input autoFocus={true} type="text" name="name" id="name"
-                                   onChange={handleChange} required={true} pattern='^[A-Za-z]{1,20}$'
+                                   onChange={handleChange} required={true}
                                   />
-                            <div className="form-error-message">
-                                <span>{errorMessageName}</span>
-                            </div>
                         </FormGroup>
                         <FormGroup>
                             <Label for="birth">Day of birth</Label>
@@ -67,13 +66,19 @@ const PersonEdit = () => {
                         </FormGroup>
                         <FormGroup>
                             <Label for="taj">TAJ Id</Label>
-                            <Input type="number" name="taj" id="taj"
+                            <Input type="number" name="taj" id="taj" min="0" max="999999999"
                                    onChange={handleChange}/>
+                            <div className="form-error-message">
+                                <span>{errorTaj}</span>
+                            </div>
                         </FormGroup>
                         <FormGroup>
                             <Label for="tax">TAX Id</Label>
-                            <Input type="number" name="tax" id="tax"
+                            <Input type="number" name="tax" id="tax" min="0" max="99999999999"
                                    onChange={handleChange}/>
+                            <div className="form-error-message">
+                                <span>{errorTax}</span>
+                            </div>
                         </FormGroup>
                         <FormGroup>
                             <Label for="email">Email</Label>
